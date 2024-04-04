@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using PeopleApp.Api.Services.Interfaces;
 using PeopleApp.Api.ViewModels;
 using PeopleApp.ClassLib.Models;
@@ -24,7 +25,15 @@ namespace PeopleApp.Api.Controllers
                 var result = _service.Get();
                 if (result.Succeeded)
                 {
-                    return Ok(result.Entities);
+                    var json = JsonConvert.SerializeObject(result.Entities.ToList(), Formatting.Indented,
+                        new JsonSerializerSettings()
+                        {
+                            ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                        }
+                    );
+                    //var json = JsonConvert.SerializeObject(result.Entities.ToList());
+                    return Ok(json);
+                    //return Ok(result.Entities.ToList());
                 }
                 return BadRequest(result.Error);
             }

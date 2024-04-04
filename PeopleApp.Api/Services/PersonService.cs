@@ -19,7 +19,7 @@ namespace PeopleApp.Api.Services
             var result = new ApiResult<Person>();
             try
             {
-                result.Entities = _context.People;
+                result.Entities = _context.People.Include(x => x.Department).Include(y=>y.Location);
                 result.Succeeded = true;
             }
             catch (Exception ex)
