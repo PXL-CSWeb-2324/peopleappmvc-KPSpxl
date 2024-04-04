@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using PeopleApp.Api.Attributes;
 using PeopleApp.Api.Data;
 using PeopleApp.Api.Data.DefaultData;
 using PeopleApp.Api.Services;
@@ -10,6 +12,10 @@ builder.Services.AddDbContext<DataContext>(options =>
     {
         options.UseSqlServer(connectionString);    
     });
+var section = builder.Configuration.GetSection("ApiKeyConfiguration");
+var apiKey = builder.Configuration.GetSection("ApiKey").Value;
+var config = new ApiKeyConfiguration { ApiKey = "test" };
+builder.Services.Configure<ApiKeyConfiguration>(section);
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IPersonService, PersonService>();
 builder.Services.AddControllers();

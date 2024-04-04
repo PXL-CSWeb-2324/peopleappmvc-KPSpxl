@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using PeopleApp.Api.Attributes;
-using PeopleApp.Api.Data;
 using PeopleApp.Api.Services.Interfaces;
 using PeopleApp.Api.ViewModels;
 using PeopleApp.ClassLib.Models;
@@ -11,16 +9,13 @@ namespace PeopleApp.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DepartmentController : ControllerBase
+    [ApiKey]
+    public class PersonKeyController : ControllerBase
     {
-        IDepartmentService _service;
-        IOptions<ApiKeyConfiguration> _config;
-        public DepartmentController(IDepartmentService service, IOptions<ApiKeyConfiguration> config)
+        IPersonService _service;
+        public PersonKeyController(IPersonService service)
         {
-            
-            
             _service = service;
-            _config = config;
         }
         #region Get
         [HttpGet]
@@ -28,9 +23,8 @@ namespace PeopleApp.Api.Controllers
         {
             try
             {
-                var apiKey = _config.Value.ApiKey ;
                 var result = _service.Get();
-                if(result.Succeeded)
+                if (result.Succeeded)
                 {
                     return Ok(result.Entities);
                 }
@@ -61,7 +55,7 @@ namespace PeopleApp.Api.Controllers
         #endregion
         #region Post
         [HttpPost]
-        public IActionResult Add(DepartmentViewModel model)
+        public IActionResult Add(PersonViewModel model)
         {
             try
             {
@@ -81,7 +75,7 @@ namespace PeopleApp.Api.Controllers
         #endregion
         #region Update
         [HttpPut]
-        public IActionResult Update(Department model)
+        public IActionResult Update(Person model)
         {
             try
             {
