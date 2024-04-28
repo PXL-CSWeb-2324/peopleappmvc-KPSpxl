@@ -44,9 +44,17 @@ namespace PeopleApp.Mvc.Services
             }
             return result;
         }
-        public ApiResult<Department> GetById()
+        public async Task<ApiResult<Department>> GetByIdAsync(long id)
         {
-            throw new NotImplementedException();
+            var result = new ApiResult<Department>();
+            var client = _httpClient.CreateClient(ApiHelper.ClientName);
+            HttpResponseMessage response = client.GetAsync($"department/{id}").Result;
+            if (response.IsSuccessStatusCode)
+            {
+                result.Entity = await response.Content.ReadAsAsync<Department>();
+                result.Succeeded = true;
+            }
+            return result;
         }
     }
 }

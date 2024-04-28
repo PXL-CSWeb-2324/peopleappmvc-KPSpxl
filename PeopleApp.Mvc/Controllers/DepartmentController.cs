@@ -20,5 +20,36 @@ namespace PeopleApp.Mvc.Controllers
             }
             return View(Enumerable.Empty<Department>());
         }
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateAsync(Department department)
+        {
+            if(ModelState.IsValid)
+            {
+                var result = await _repo.AddAsync(department);
+                if(result.Succeeded)
+                {
+                    return RedirectToAction("Index");
+                }
+                ModelState.AddModelError("", result.Error);                
+            }            
+            return View();
+        }
+        public async Task<IActionResult> DetailsAsync(long id)
+        {
+            var result = await _repo.GetByIdAsync(id);
+            if (result.Succeeded)
+            {
+                return View(result.Entity);
+            }
+            ModelState.AddModelError("", result.Error);
+            return View();
+        }
     }
 }
+
+
